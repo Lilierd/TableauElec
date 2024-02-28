@@ -3,13 +3,8 @@ import "../styles/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
-  title: "TableauElec",
-  description: "Tableau de gestion des activités MRI Elec",
-};
 
 export default function RootLayout({ children }) {
-
   return (
     <html lang="fr">
       <body className={inter.className}>{children}</body>
