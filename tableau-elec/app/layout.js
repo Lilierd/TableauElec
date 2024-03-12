@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="fr">
-      <body className={inter.className}><Header /><div className="m-8">{children}</div></body>
+      <body className={inter.className}><Header /><div className="mt-12 mx-8 p-2 border-x-2 border-gray-300">{children}</div></body>
     </html>
   );
 }

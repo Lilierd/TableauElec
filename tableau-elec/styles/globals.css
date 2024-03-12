@@ -28,3 +28,18 @@ header {
     text-wrap: balance;
   }
 }
+
+h1 {
+  font-size: x-large;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: large;
+  font-weight: 600;
+}
+
+table tbody tr td {
+  padding-inline: 2em;
+  padding-block: 2em;
+}

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { connectUser } from "@/app/actions";  // <------- Données envoyées ici
+import { connectUser } from "@/app/actions";  // <------- Données de connexion envoyées ici
 
 export default function ConnectModal({ isOpen }) {
   var test = useState(false);
@@ -57,11 +57,11 @@ export default function ConnectModal({ isOpen }) {
   return (
     <div>
       {isOpen && <dialog
-        className={`fixed left-0 top-0 w-full h-full bg-black bg-opacity-20 z-50 overflow-auto backdrop-blur flex justify-center items-center`} id="modal">
+        className={`fixed left-0 top-0 w-full h-full bg-black bg-opacity-20 z-50 overflow-auto backdrop-blur flex justify-center items-center transition-all`} id="modal">
         <div className="flex flex-col bg-white p-1 rounded">
           <div className="flex flex-row justify-end"><div className="flex flex-col"><button className="bg-red-600 px-3 py-1 rounded text-white hover:bg-red-800 transition-all" id="croix1">X</button></div></div>
           <div className="flex flex-row">
-            <form className="bg-white p-4 rounded shadow-xl" action={connectUser}>
+            <form className="bg-white p-4 rounded shadow-xl">
               <fieldset name="login[]" className="flex flex-row border-t-4 border-double">
                 <legend className="uppercase font-bold text-l text-center px-1">Connexion</legend>
                 <fieldset className="flex flex-col">
