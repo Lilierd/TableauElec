@@ -12,4 +12,5 @@ RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg -
 
 RUN git clone https://github.com/Lilierd/TableauElec
 RUN cd tableau-elec \
+    && npm install \
     && npm run dev
