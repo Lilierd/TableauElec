@@ -1,0 +1,16 @@
+services:
+  tableau-elec:
+    build:
+      dockerfile: Dockerfile
+      args:
+        TZ: "Europe/Paris"
+        NODE_VERSION: 20
+    tty: true
+    ports:
+      - '80:8080'
+    networks:
+      - tableau-elec-net
+
+networks:
+  tableau-elec-net:
+    driver: bridge
