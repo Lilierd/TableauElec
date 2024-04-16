@@ -1,5 +1,7 @@
 "use client"
 
+import { TeButton } from "../TeButton";
+
 export default function CalendrierExec() {
   const calendarUpdate = () => {
     console.log("yo");
@@ -7,7 +9,7 @@ export default function CalendrierExec() {
 
   return (
     <div>
-      <button type="button" className="px-4 py-1 mr-5 rounded bg-orange-500 hover:bg-orange-800 transition-all" id="submit" onClick={calendarUpdate}>Valider</button>
+      <TeButton texte="Valider" onClick={calendarUpdate}/>
       <table>
         <caption>Patate</caption>
         <thead>
