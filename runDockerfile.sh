@@ -1,1 +1,1 @@
-docker compose run --rm --remove-orphans tableau-elec /bin/bash
+docker compose run -d --rm --remove-orphans --service-ports tableau-elec /bin/bash

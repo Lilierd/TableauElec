@@ -1,18 +1,34 @@
 services:
   tableau-elec:
+    container_name: tableau-elec
     build:
       dockerfile: Dockerfile
+      context: ./tableau-elec/docker/tableau-elec
       args:
         TZ: "Europe/Paris"
         NODE_VERSION: 20
-    # extra_hosts:
-    #   - 'host.docker.internal:host-gateway'
+    volumes:
+      - './tableau-elec:/home/tableauElec'
     tty: true
     ports:
-      - '80:8080'
+      - "8080:8080"
     networks:
       - tableau-elec-net
     command: npm run dev
+  
+  database:
+    container_name: postgres-db
+    image: postgres:latest
+    volumes:
+      - ./tableau-elec/database:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=S&cr3tP@ssw0rd
+      - POSTGRES_USER=lilierd
+      - POSTGRES_DB=tableau-elec_db
+    networks:
+      - tableau-elec-net
 
 networks:
   tableau-elec-net:
