@@ -1,4 +1,9 @@
 # TableauElec
+Outil de gestion de travaux elec.
+
+## Utilisation
+### Commandes à exécuter
+- `docker compose up -d` : lancer le service.
 
 ## Technologies utilisées :
 - Tailwind CSS
