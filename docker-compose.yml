@@ -14,7 +14,7 @@ services:
       - "8080:8080"
     networks:
       - tableau-elec-net
-    command: npm run dev
+    # command: npm run dev
   
   database:
     container_name: postgres-db

@@ -35,8 +35,7 @@ export default function ActivitePage() {
     };
 
     if (activite === null) {
-      createActivity(formData);
-      //TODO: injection dans la BDD
+      createActivity(formData); 
 
       //TODO: rediriger sur cette page mais avec activite=activite en GET
     }
@@ -52,11 +51,11 @@ export default function ActivitePage() {
   else {
     legende = activite; //TODO: Recuperer les data de l'activité dans les var qui sont en value des input
   }
-
+  
   return (
     <div>
       <div className="mb-4 p-2 flex justify-between">
-        <div>{(modifying || activite != null) && <TeButton onClick={setModifying} texte={"Modifier"}>Modifier</TeButton>}</div>
+        <div>{(!modifying && !(activite === null)) && <TeButton onClick={setModifying} texte={"Modifier"}>Modifier</TeButton>}</div>
         {/* <button type="button" className="px-4 py-1 mr-5 rounded bg-orange-500 hover:bg-orange-800 transition-all" id="submit" onClick={setModifying}>Modifier</button> */}
         <Link className="group p-1 transition-all border-gray-400 duration-200 rounded inline-block border hover:bg-gray-200" href="/">
           <span className="group-hover:-translate-x-1 duration-200 inline-block">&lt;-</span> Retour</Link>
