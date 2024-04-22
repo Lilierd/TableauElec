@@ -1,7 +1,6 @@
 'use server' //Pour que les données et interactions arrivent côté serveur
 
-import { conn } from "@/controller/db";
-import pg from 'pg';
+import axios, { Axios } from 'axios';
 
 /**
  * Connexion utilisateur
@@ -17,14 +16,22 @@ export async function connectUser(formData) { //Connexion
  */
 export async function createActivity(formData) {
     console.log("Connexion : " + formData.titre + " " + formData.cdt + " " + formData.execs + " " + formData.desc);
+
+    let data = { content: formData }
+    const response = await fetch('http://localhost:8080/api/sendActivite', {
+        method: 'POST',
+        headers:{
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+    console.log(response.body);
+    /* axios.post('http://localhost:8080/api/sendActivite', data)
+        .then((response) => {
+            console.log(response)
+        })
+        .catch((e) => { console.log(e) }); */
     //TODO: injection dans la BDD
-
-    const client = await conn.connect();
-    const res = await client.query("SELECT * FROM users WHERE id = $1", [1]);
-    console.log(res.rows[0]);
-
-    client.release();
-    console.log(conn);
 }
 
 /**
