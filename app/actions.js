@@ -15,22 +15,14 @@ export async function connectUser(formData) { //Connexion
  * @param {[titre, cdt, execs, desc, files]} formData
  */
 export async function createActivity(formData) {
-    console.log("Connexion : " + formData.titre + " " + formData.cdt + " " + formData.execs + " " + formData.desc);
+    console.log("activite : " + formData.titre + " " + formData.cdt + " " + formData.execs + " " + formData.desc);
 
-    let data = { content: formData }
-    const response = await fetch('http://localhost:8080/api/sendActivite', {
-        method: 'POST',
-        headers:{
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    });
-    console.log(response.body);
-    /* axios.post('http://localhost:8080/api/sendActivite', data)
-        .then((response) => {
-            console.log(response)
-        })
-        .catch((e) => { console.log(e) }); */
+    const res = await fetch('http://localhost:8080/api/sendActivite/', {method: 'POST', body: JSON.stringify({ formData })});    //TODO: utiliser 'response' pour renvoyer une donnée
+
+    if(!res.ok)
+        throw new Error('Failed to fetch data on new activity sending');
+
+    //console.log(res);
     //TODO: injection dans la BDD
 }
 

@@ -24,7 +24,7 @@ export default function ActivitePage() {
   const [files, setFiles] = useState('');
 
   // * Submit du formulaire
-  const formSubmitHandler = () => {
+  const formSubmitHandler = async () => {
     setNotModifying();
     const formData = {
       titre: titre,
@@ -37,10 +37,11 @@ export default function ActivitePage() {
     if (activite === null) {
       createActivity(formData); 
 
+
       //TODO: rediriger sur cette page mais avec activite=activite en GET
     }
     else {
-      modifyActivity(formData);
+      await modifyActivity(formData);
       //TODO: modif dans la BDD
     }
   }
