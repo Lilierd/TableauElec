@@ -1,6 +1,7 @@
 'use server' //Pour que les données et interactions arrivent côté serveur
 
 import axios, { Axios } from 'axios';
+import { NextRequest } from 'next/server';
 
 /**
  * Connexion utilisateur
@@ -12,18 +13,20 @@ export async function connectUser(formData) { //Connexion
 
 /**
  * Crée une nouvelle ligne dans la table "Activite" 
- * @param {[titre, cdt, execs, desc, files]} formData
+ * @param {FormData} formData
  */
 export async function createActivity(formData) {
-    console.log("activite : " + formData.titre + " " + formData.cdt + " " + formData.execs + " " + formData.desc);
-
-    const res = await fetch('http://localhost:8080/api/sendActivite/', { method: 'POST', body: JSON.stringify({ formData }) });
+    console.log("Nouvelle activité : " + formData.get('titre') + " " + formData.get('cdt') + " " + formData.get('execs') + " " + formData.get('desc'));
+    const data = JSON.stringify({
+        titre: formData.get('titre'),
+        cdt: formData.get('cdt'),
+        desc: formData.get('desc')
+    });
+    
+    const res = await fetch('http://141.94.237.226:8080/api/activite/', { method: 'POST', body: data });
 
     if (!res.ok)
         return;
-
-    //console.log(res);
-    //TODO: injection dans la BDD
 }
 
 /**
@@ -40,7 +43,7 @@ export async function modifyActivity(formData) {
  * @returns List of users
  */
 export async function getAllUsers() {
-    const res = await fetch('http://141.94.237.226:8080/api/getUsers/', { method: 'POST' });
+    const res = await fetch('http://141.94.237.226:8080/api/getUsers/', { method: 'POST'});
 
     if(!res.ok)
         return;
@@ -53,14 +56,17 @@ export async function getAllUsers() {
 /**
  * Request (POST) all users from database and returns them
  * @returns List of users
+ * @deprecated
  */
 export async function getAllActivites() {
-    const res = await fetch('http://141.94.237.226:8080/api/activite/');
+    const res = await fetch('http://141.94.237.226:8080/api/activite/', { headers: { 'cache-control' : 'no-cache' } });
 
     if(!res.ok)
         return;
 
     const activites = await res.json();
+
+    console.log(activites);
     
     return activites.body;
 }

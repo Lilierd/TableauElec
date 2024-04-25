@@ -17,18 +17,18 @@ export function Header() {
         {" | "}<Link className="inline-block" href="/calendrier">Calendrier</Link>
         {" | "}
         <div className="group inline-block"><Link href="/">Travaux<span className="group inline-block">&#129171;</span></Link>
-          <div className="invisible absolute flex flex-col group-hover:visible bg-gray-300 border border-gray-400 py-1 rounded">
-            <Link className="hover:bg-gray-200 px-3" href='/activite'>Création</Link>
-            <Link className="hover:bg-gray-200 px-3" href="/activite/liste">Liste</Link>
-            <Link className="hover:bg-gray-200 px-3" href="/"></Link>
+          <div className="invisible absolute flex flex-col group-hover:visible bg-gray-300 border-l border-r border-gray-400 py-1 rounded">
+            <Link className="hover:bg-gray-200 px-5" href='/activite'>Création</Link>
+            <Link className="hover:bg-gray-200 px-5" href="/activite/liste">Liste</Link>
+            <Link className="hover:bg-gray-200 px-5" href="/"></Link>
           </div>
         </div>
         {" | "}
         <div className="group inline-block"><Link href="/management">Management<span className="group inline-block">&#129171;</span></Link>
-          <div className="invisible absolute flex flex-col group-hover:visible bg-gray-300 border border-gray-400 py-1 rounded">
-            <Link className="hover:bg-gray-200 px-3" href='/management/equipe'>Equipe</Link>
-            {/* <Link className="hover:bg-gray-200 px-3" href="">Liste</Link> */}
-            {/* <Link className="hover:bg-gray-200 px-3" href="/"></Link> */}
+          <div className="invisible absolute flex flex-col group-hover:visible bg-gray-300 border-l border-r border-gray-400 py-1 rounded">
+            <Link className="hover:bg-gray-200 px-5" href='/management/equipe'>Equipe</Link>
+            {/* <Link className="hover:bg-gray-200 px-5" href="">Liste</Link> */}
+            {/* <Link className="hover:bg-gray-200 px-5" href="/"></Link> */}
           </div>
         </div>
       </div>

@@ -26,17 +26,17 @@ export default function ActivitePage() {
   // * Submit du formulaire
   const formSubmitHandler = async () => {
     setNotModifying();
-    const formData = {
-      titre: titre,
-      cdt: cdt,
-      execs: execs,
-      desc: desc,
-      files: files,
-    };
+
+    let formData = new FormData();
+
+    formData.append('titre', titre)
+    formData.append('cdt',cdt)
+    formData.append('execs',execs)
+    formData.append('desc',desc)
+    // formData.append('files',files);
 
     if (activite === null) {
       createActivity(formData); 
-
 
       //TODO: rediriger sur cette page mais avec activite=activite en GET
     }

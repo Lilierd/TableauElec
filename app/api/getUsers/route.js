@@ -1,8 +1,10 @@
 import conn from "@/controller/db";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
-export async function POST(req) {
+export async function GET(req) {
     try {
+        const headers = new Headers(req.headers);
+
         const query = 'SELECT * FROM utilisateurs';
         
         const result = await conn.query(
@@ -10,7 +12,7 @@ export async function POST(req) {
             // values
         );
         const users = result.rows;
-        console.log("Req sur les utilisateurs", users);
+        console.log("Req sur les utilisateurs");
 
         return NextResponse.json({ message: "getUsers", headers: { 'content-type': 'application/json' }, body: users }, { status: 200 });
     } catch (error) {

@@ -1,7 +1,23 @@
-import { getAllUsers } from "@/app/actions";
+"use client"
 
-export default async function Page() {
-  const users = await getAllUsers();
+import { getAllUsers } from "@/app/actions";
+import { useState, useEffect } from 'react'
+
+export default function Page() {
+  const [users, setUsers] = useState(null)
+  const [isLoading, setLoading] = useState(true)
+ 
+  useEffect(() => {
+    fetch('http://141.94.237.226:8080/api/getUsers/')
+      .then((res) => res.json())
+      .then((usersData) => {
+        setUsers(usersData.body)
+        setLoading(false)
+      })
+  }, []);
+
+  if (isLoading) return (<p>Chargement des utilisateurs...</p>);
+  if (!users) return (<p>Aucun utilisateur trouvée.</p>);
 
   return (
     <div>
