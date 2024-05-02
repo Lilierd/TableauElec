@@ -68,7 +68,7 @@ export default function ActivitePage() {
           <fieldset className="flex flex-row">
             <fieldset className="flex flex-col">
               <fieldset className="mt-2 flex flex-col">
-                <label>Titre de l'activité</label>
+                <label>Titre de l&apos;activité</label>
                 <input className="px-2 py-1 hover:bg-gray-200 focus:bg-gray-200 border transition-all rounded" type="text" value={titre}
                   onChange={(event) => setTitre(event.target.value)} name="activite[titre]" />
               </fieldset>
@@ -84,7 +84,7 @@ export default function ActivitePage() {
                 {/* TODO: Mettre une possibilité de mettre plusieurs execs/Faire apparaitre une liste */}
               </fieldset>
               <fieldset className="mt-2 flex flex-col">
-                <label>Description de l'activité</label>
+                <label>Description de l&apos;activité</label>
                 <textarea className="px-2 py-1 hover:bg-gray-200 focus:bg-gray-200 border transition-all rounded resize-y" cols="50" value={desc}
                   onChange={(event) => setDesc(event.target.value)} name="activite[desc]" maxLength="1000" />
               </fieldset>

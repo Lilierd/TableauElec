@@ -1,7 +1,8 @@
 "use client"
 
-import { getAllActivites } from "@/app/actions";
 import { useState, useEffect } from 'react'
+import loading from "@/public/loading.gif"
+import Image from "next/image";
 
 export default function Page() {
   const [activites, setActivites] = useState(null)
@@ -16,7 +17,7 @@ export default function Page() {
       })
   }, []);
  
-  if (isLoading) return (<p>Chargement des activités...</p>);
+  if (isLoading) return (<div><p><Image src={loading} width={20} height={20} alt="Loading" />Chargement des activités...</p></div>);
   if (!activites) return (<p>Aucune activité trouvée.</p>);
 
   return (

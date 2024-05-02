@@ -13,7 +13,7 @@ export default function ActiviteComponent({ activite }) {
                 <h2 className="pb-2 hover:text-orange-400 text-orange-600 transition-all"><Link href={{
                     pathname: "/activite",
                     query: { activite: activity.name},   //Remplacer par l'id dans la BDD
-                }}>Activité "{activity.name}"</Link></h2>
+                }}>Activité &quot;{activity.name}&quot;</Link></h2>
                 <div className="py-2"><p className="font-semibold">Chargé de travaux</p><span id="CdT">{activity.CdT}</span></div>
                 <div className="pt-2"><p className="font-semibold">Exécutants</p><span id="Execs">{activity.exec}{/* Remplacer par un map de la liste de execs */}</span></div>
             </div>
