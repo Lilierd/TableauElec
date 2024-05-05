@@ -10,7 +10,11 @@ import { NextRequest, NextResponse } from "next/server";
  */
 export async function GET(req) {
     try {
-        const query = 'SELECT * FROM activites';
+        const activite = req.nextUrl.searchParams.get('activite');
+
+        let query = `SELECT * FROM activites`;
+        if(activite !== null)
+            query = `SELECT * FROM activites WHERE id_activite=${activite}`;
 
         const result = await conn.query(
             query,
