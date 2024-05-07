@@ -1,4 +1,35 @@
-# TableauElec
+# TableauElec (EN)
+Electricity works management tool.
+
+## Usage
+### Commandes à exécuter
+- `docker compose up -d` : Launch the services.
+
+## Technologies :
+- Tailwind CSS
+- React
+- Next.js
+- PostgreSQL
+- MinIO
+
+### Summary :
+Description : Work management tool for intervention of an electrical technicians' team.
+Pages / Features :
+- Landing page with the list of the works of the connected user
+- Connection modal
+- Works management :
+    - List/Creation/Update/Delete works
+    - File system (MiniIO)
+    - Comments
+    - Tasks management
+- Mail sending
+- Roles management (Manager, CA, CSI, technician…)
+- API
+- Pipeline (not implemented)
+- Responsive (not yet)
+
+
+# TableauElec (FR)
 Outil de gestion de travaux elec.
 
 ## Utilisation
