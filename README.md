@@ -2,7 +2,7 @@
 Electricity works management tool.
 
 ## Usage
-### Commandes à exécuter
+### Commands to set up
 - `docker compose up -d` : Launch the services.
 
 ## Technologies :
