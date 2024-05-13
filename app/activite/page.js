@@ -27,7 +27,7 @@ export default function ActivitePage() {
         .then((res) => res.json())
         .then((activitesData) => {
           setActivite(activitesData.body);
-          fetch(`http://141.94.237.226:8080/api/getUsers?user=${activitesData.body[0].id_ct}`)
+          fetch(`http://141.94.237.226:8080/api/users?user=${activitesData.body[0].id_ct}`)
             .then((res) => res.json())
             .then((userData) => {
               setCdtUser(userData.body);
