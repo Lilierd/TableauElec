@@ -10,7 +10,10 @@ import { NextRequest, NextResponse } from "next/server";
  */
 export async function GET(req) {
     try {
+        const headers = new Headers(req.headers);
+
         const activite = req.nextUrl.searchParams.get('activite');
+        const role = req.nextUrl.searchParams.get('role'); //TODO
 
         let query = `SELECT * FROM activites`;
         if(activite !== null)
@@ -22,6 +25,9 @@ export async function GET(req) {
         );
         const activites = result.rows;
         console.log("Req sur les activités");
+
+        if(activites.length == 0)
+            return NextResponse.json({ message: "Req all activites.", headers: { 'content-type': 'application/json', 'Cache-Control' : 'no-cache', 'cache' : 'no-store' }, body: "No data" }, { status: 200 });
         
         return NextResponse.json({ message: "Req all activites.", headers: { 'content-type': 'application/json', 'Cache-Control' : 'no-cache', 'cache' : 'no-store' }, body: activites }, { status: 200 });
     } catch (error) {

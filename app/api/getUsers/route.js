@@ -1,6 +1,5 @@
 import conn from "@/controller/db";
 import { NextResponse, NextRequest } from "next/server";
-import qs from 'qs';
 
 export async function GET(req) {
     try {
@@ -8,9 +7,9 @@ export async function GET(req) {
         const userid = req.nextUrl.searchParams.get('user');
 
         let query = "SELECT * FROM utilisateurs";
-        if(userid !== null)
+        if (userid !== null)
             query = `SELECT * FROM utilisateurs WHERE id_utilisateur=${userid}`;
-        
+
         const result = await conn.query(
             query,
             // values
@@ -18,6 +17,9 @@ export async function GET(req) {
 
         const users = result.rows;
         console.log("Req sur les utilisateurs");
+
+        if (users.length == 0)
+            return NextResponse.json({ message: "Utilisateurs", headers: { 'content-type': 'application/json', 'Cache-Control': 'no-cache', 'cache': 'no-store' }, body: "No data" }, { status: 200 });
 
         return NextResponse.json({ message: "Utilisateurs", headers: { 'content-type': 'application/json' }, body: users }, { status: 200 });
     } catch (error) {
