@@ -1,12 +1,15 @@
 "use client"
 
-import { getAllUsers } from "@/app/actions";
 import { useState, useEffect } from 'react'
+import Image from "next/image";
+import loading from "@/public/loading.gif"
+import { TeButton } from "@/components/TeButton";
+import Link from "next/link";
 
 export default function Page() {
-  const [users, setUsers] = useState(null)
-  const [isLoading, setLoading] = useState(true)
- 
+  const [users, setUsers] = useState(null);
+  const [isLoading, setLoading] = useState(true);
+
   useEffect(() => {
     fetch('http://141.94.237.226:8080/api/getUsers/')
       .then((res) => res.json())
@@ -16,7 +19,7 @@ export default function Page() {
       })
   }, []);
 
-  if (isLoading) return (<p>Chargement des utilisateurs...</p>);
+  if (isLoading) return (<div><p><Image src={loading} width={20} height={20} alt="Loading" />Chargement des utilisateurs...</p></div>);
   if (!users) return (<p>Aucun utilisateur trouvée.</p>);
 
   return (
@@ -25,13 +28,15 @@ export default function Page() {
       <table>
         <thead><th>ID</th><th>Prénom NOM</th><th>ID role</th></thead>
         <tbody>
-          {
-            users.map(user => <tr key={user.id_utilisateur}>
+          {users.map(user => <tr key={user.id_utilisateur}>
               <td>{user.id_utilisateur}</td>
               <td>{user.nom}</td>
               <td>{user.id_role}</td>
-            </tr>)
-          }
+              <td><Link href={{
+                    pathname: "/management/equipe/utilisateur",
+                    query: { user: user.id_utilisateur},
+                }}><TeButton type="submit" texte="Modifier" /></Link></td>
+          </tr>)}
         </tbody>
       </table>
     </div>

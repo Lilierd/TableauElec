@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link";
-import ConnectModal from "@/components/connexion/ConnectModal";
 import { useState } from "react";
 
 export function Header() {
@@ -33,9 +32,8 @@ export function Header() {
         </div>
       </div>
       <div className='inline-block'>
-        <Link className="hover:-translate-x-1 transition-all duration-300 inline-block hover:scale-110" id="connexionBouton" onClick={openModal} href="">Connexion</Link>
+        <Link className="hover:-translate-x-1 transition-all duration-300 inline-block hover:scale-110" id="connexionBouton" href="/login">Connexion</Link>
       </div>
     </header>
-    {<ConnectModal isOpen={isOpen} />}
   </>);
 }
