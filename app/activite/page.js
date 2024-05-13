@@ -3,13 +3,39 @@
 import { TeButton } from "@/components/TeButton";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect, act } from "react";
+import loading from "@/public/loading.gif"
+import Image from "next/image";
 
 import { createActivity, modifyActivity } from "@/app/actions";  // * <------- Données de création/modif envoyées ici
 
 export default function ActivitePage() {
   const searchParams = useSearchParams();
-  const activite = searchParams.get("activite"); // TODO: Remplacer le titre par un id
+  const activite_id = searchParams.get("activite"); // TODO: Remplacer le titre par un id
+
+  const [activite, setActivite] = useState(null)
+  const [cdtUser, setCdtUser] = useState(null)
+  const [isLoading, setLoading] = useState(true)
+
+  var legende = ""; // * Si création ou modif
+  if (activite_id === null)
+    legende = "Création d'une activité";
+
+  if (activite_id !== null) {
+    useEffect(() => {
+      fetch(`http://141.94.237.226:8080/api/activite?activite=${activite_id}`)
+        .then((res) => res.json())
+        .then((activitesData) => {
+          setActivite(activitesData.body);
+          fetch(`http://141.94.237.226:8080/api/getUsers?user=${activitesData.body[0].id_ct}`)
+            .then((res) => res.json())
+            .then((userData) => {
+              setCdtUser(userData.body);
+              setLoading(false);
+            })
+        })
+    }, []);
+  }
 
   // * En cours de modif ou non
   const [modifying, setModify] = useState(false);
@@ -30,15 +56,15 @@ export default function ActivitePage() {
     let formData = new FormData();
 
     formData.append('titre', titre)
-    formData.append('cdt',cdt)
-    formData.append('execs',execs)
-    formData.append('desc',desc)
+    formData.append('cdt', cdt)
+    formData.append('execs', execs)
+    formData.append('desc', desc)
     // formData.append('files',files);
 
-    if (activite === null) {
-      createActivity(formData); 
+    if (activite_id === null) {
+      createActivity(formData);
 
-      //TODO: rediriger sur cette page mais avec activite=activite en GET
+      //TODO: rediriger sur cette page mais avec activite_id=activite_id en GET
     }
     else {
       await modifyActivity(formData);
@@ -46,13 +72,9 @@ export default function ActivitePage() {
     }
   }
 
-  var legende = ""; // * Si création ou modif
-  if (activite === null)
-    legende = "Création d'une activité";
-  else {
-    legende = activite; //TODO: Recuperer les data de l'activité dans les var qui sont en value des input
-  }
-  
+  if (isLoading) return (<div><p><Image src={loading} width={20} height={20} alt="Loading" />Chargement de l'activité...</p></div>);
+  if (!activite || activite === "No data") return (<p><span className="text-red-600 font-bold">Erreur :</span> Aucune activité trouvée.</p>);
+
   return (
     <div>
       <div className="mb-4 p-2 flex justify-between">
@@ -61,7 +83,7 @@ export default function ActivitePage() {
         <Link className="group p-1 transition-all border-gray-400 duration-200 rounded inline-block border hover:bg-gray-200" href="/">
           <span className="group-hover:-translate-x-1 duration-200 inline-block">&lt;-</span> Retour</Link>
       </div>
-      <h1 className="mb-6">{modifying ? "Modification de " + legende : legende}</h1>
+      <h1 className="mb-6">{modifying ? "Modification de " + activite[0].nom : activite[0].nom}</h1>
 
       {(modifying || activite === null) ?
         <form>
@@ -103,13 +125,20 @@ export default function ActivitePage() {
         : // * Si pas modification mais données existantes
         <div>
           <div id="CT">
-
+            <h2>Chargé de travaux</h2>
+            <p>{cdtUser[0].nom}</p>
           </div>
           <div id="Execs">
-
+            <h2>Exécutants</h2>
+            <p></p>
           </div>
           <div id="Desc">
-
+            <h2>Description</h2>
+            <p>{activite[0].descript}</p>
+          </div>
+          <div id="Date">
+            <h2>Date</h2>
+            <p>{activite[0].date_activite}</p>
           </div>
         </div>
       }
