@@ -41,3 +41,22 @@ CREATE TABLE Exec_Activites(
             REFERENCES Utilisateurs(id_utilisateur)
             ON DELETE SET NULL
 );
+
+CREATE TABLE ForumMessages(
+    id_forum SERIAL,
+    PRIMARY KEY(id_forum),
+    Titre VARCHAR(100),
+    Texte VARCHAR(1000),
+    Date_message TIMESTAMP,
+    id_activite INT,
+    CONSTRAINT fk_activite
+        FOREIGN KEY(id_activite)
+            REFERENCES Activites(id_activite)
+            ON DELETE SET NULL,
+    id_author INT,
+    CONSTRAINT fk_author
+        FOREIGN KEY(id_author)
+            REFERENCES Utilisateurs(id_utilisateur)
+            ON DELETE SET NULL
+
+);
