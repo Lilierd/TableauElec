@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import loading from "@/public/loading.gif"
 import Image from "next/image";
+import Link from 'next/link';
+import { TeButton } from '@/components/TeButton';
 
 export default function Page() {
   const [activites, setActivites] = useState(null)
@@ -24,7 +26,7 @@ export default function Page() {
     <div>
       <h1>Activités</h1>
       <table>
-        <thead><th scope="col">ID</th><th>Nom</th><th>Desc</th><th>Date</th><th>ID CT</th></thead>
+        <thead><th scope="col">ID</th><th>Nom</th><th>Desc</th><th>Date</th><th>ID CT</th><th></th></thead>
         <tbody>
           {
             activites.map(activite => <tr key={activite.id_activite}>
@@ -33,6 +35,11 @@ export default function Page() {
               <td>{activite.descript}</td>
               <td>{activite.date_activite}</td>
               <td>{activite.id_ct}</td>
+              <td><Link href={{
+                    pathname: "/activite",
+                    query: { activite: activite.id_activite},   //Remplacer par l'id dans la BDD
+                }}><button className="group p-1 transition-all border-gray-400 duration-200 rounded inline-block border hover:bg-gray-200">
+                Ouvrir <span className="group-hover:translate-x-1 duration-200 inline-block">-&gt;</span></button></Link></td>
             </tr>)
           }
         </tbody>
