@@ -14,28 +14,43 @@ export async function connectUser(formData) { //Connexion
 /**
  * Crée une nouvelle ligne dans la table "Activite" 
  * @param {FormData} formData
+ * @returns {int} new activity_id
  */
 export async function createActivity(formData) {
-    console.log("Nouvelle activité : " + formData.get('titre') + " " + formData.get('cdt') + " " + formData.get('execs') + " " + formData.get('desc'));
     const data = JSON.stringify({
         titre: formData.get('titre'),
         cdt: formData.get('cdt'),
+        rep: formData.get('rep'),
         desc: formData.get('desc')
     });
 
-    const res = await fetch('http://141.94.237.226:8080/api/activite/', { method: 'POST', body: data });
-
-    if (!res.ok)
-        return;
+    const id = await fetch('http://141.94.237.226:8080/api/activite/', { method: 'POST', body: data })
+    .then((res) => res.json())
+    .then((data) => {
+        return data.body;
+    });
+    
+    return id;
 }
 
 /**
  * Modifie une ligne dans la table "Activite"
- * @param {[titre, cdt, execs, desc, files]} formData
+ * @param {FormData} formData
  */
 export async function modifyActivity(formData) {
-    console.log("Connexion : " + formData.titre + " " + formData.cdt + " " + formData.execs + " " + formData.desc);
-    //TODO: modif dans la BDD
+    const data = JSON.stringify({
+        id_activite: formData.get('id_activite'),
+        titre: formData.get('titre'),
+        cdt: formData.get('cdt'),
+        rep: formData.get('rep'),
+        execs: formData.get('execs'),
+        desc: formData.get('desc')
+    });
+    
+    const res = await fetch('http://141.94.237.226:8080/api/activite/', { method: 'PATCH', body: data });
+
+    if (!res.ok)
+        return;
 }
 
 /**
@@ -91,4 +106,18 @@ export async function getAllActivites() {
     console.log(activites);
 
     return activites.body;
+}
+
+
+export async function postComment(formData) {
+    const data = JSON.stringify({
+        id_utilisateur: formData.get('id_utilisateur'),
+        titre: formData.get('titre'),
+        texte: formData.get('message'),
+        id_activite: formData.get('id_activite')
+    });
+
+    const res = await fetch('http://141.94.237.226:8080/api/forum/', { headers: { 'cache-control': 'no-cache' }, method: 'POST', body: data });
+
+    return res.ok;
 }
