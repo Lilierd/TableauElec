@@ -21,12 +21,10 @@ export async function GET(req) {
         if (activite !== null && role !== null) {
             query = `SELECT * FROM activites WHERE id_activite=$1`;
             values = [activite, role];
-            console.log(values);
         }
         else if (activite !== null) {
             query = `SELECT * FROM activites WHERE id_activite=$1`;
             values = [ activite ];
-            console.log(values);
         }
         const result = await conn.query(
             query,
@@ -74,8 +72,6 @@ export async function POST(req) {
         const resultb = await conn.query("SELECT currval(pg_get_serial_sequence('activites','id_activite'))");
 
         const id = resultb.rows[0].currval;
-
-        console.log(id);
 
         console.log("Nouvelle activité créée.");
 

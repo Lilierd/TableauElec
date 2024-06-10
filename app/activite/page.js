@@ -3,11 +3,11 @@
 import { TeButton } from "@/components/TeButton";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, act } from "react";
+import { useState, useEffect } from "react";
 import loading from "@/public/loading.gif"
 import Image from "next/image";
 
-import { createActivity, modifyActivity } from "@/app/actions";  // * <------- Données de création/modif envoyées ici
+import { createActivity, modifyActivity, postComment } from "@/app/actions";  // * <------- Données de création/modif envoyées ici
 
 export default function ActivitePage() {
   const searchParams = useSearchParams();
@@ -44,7 +44,7 @@ export default function ActivitePage() {
                   fetch(`http://141.94.237.226:8080/api/forum?activite=${activite_id}`)
                     .then((res) => res.json())
                     .then((forumData) => {
-                      if(forumData.body !== null)
+                      if (forumData.body !== "No data")
                         setForumMessages(forumData.body);
                       setLoading(false);
                     });
@@ -67,13 +67,17 @@ export default function ActivitePage() {
   const setModifying = () => { setModify(true) };
   const setNotModifying = () => { setModify(false) };
 
-  // * formData
+  // * formData activite
   const [titre, setTitre] = useState('');
   const [cdt, setCdt] = useState(null);
   const [execs, setExecs] = useState('');
   const [rep, setRep] = useState('');
   const [desc, setDesc] = useState('');
   const [files, setFiles] = useState('');
+
+  //* formData comment
+  const [cTitre, setCTitre] = useState("");
+  const [cMessage, setCMessage] = useState("");
 
   // * Submit du formulaire
   const formSubmitHandler = async (e) => {
@@ -82,6 +86,9 @@ export default function ActivitePage() {
     let formData = new FormData();
 
     if (cdt == 0)
+      return;
+
+    if (titre.length < 1 || cdt.length < 1 || rep.length < 1)
       return;
 
     formData.append('id_activite', activite_id);
@@ -104,6 +111,20 @@ export default function ActivitePage() {
       modifyActivity(formData);
       location.reload();
     }
+  }
+
+  const commentSubmitHandler = async (e) => {
+    if (cTitre.length < 1 || cMessage.length < 1 || activite_id === null)
+      return;
+
+    let formData = new FormData();
+
+    formData.append('titre', cTitre);
+    formData.append('message', cMessage);
+    formData.append('id_activite', activite_id);
+    formData.append('id_utilisateur', 1);
+
+    postComment(formData);
   }
 
   if (isLoading) return (<div><p><Image src={loading} width={20} height={20} alt="Loading" />Chargement de l'activité...</p></div>);
@@ -157,8 +178,8 @@ export default function ActivitePage() {
                   onChange={(event) => setFiles(event.target.value)} name="activite[fichiers]" multiple />
               </fieldset>
               <fieldset className="flex flex-row mt-4">
-                <button type="button" className="px-4 py-1 mr-5 rounded bg-orange-500 hover:bg-orange-800 transition-all" id="submit" onClick={formSubmitHandler}>Valider</button>
-                <button type="button" className="px-4 py-2 rounded bg-orange-500 hover:bg-orange-800 transition-all" id="cancel" onClick={setNotModifying}>Annuler</button>
+                <button type="submit" className="px-4 py-1 mr-5 rounded bg-orange-500 hover:bg-orange-800 transition-all" id="submit" onClick={formSubmitHandler}>Valider</button>
+                <button type="submit" className="px-4 py-2 rounded bg-orange-500 hover:bg-orange-800 transition-all" id="cancel" onClick={setNotModifying}>Annuler</button>
               </fieldset>
             </fieldset>
           </fieldset>
@@ -187,18 +208,37 @@ export default function ActivitePage() {
               <p>{activite[0].date_activite}</p>
             </div>
           </div>
-          <div id="forum" className="mt-5 pt-5 border-t-2 border-gray-300">
+          <div id="forum" className="mt-5 pt-5 border-t-2 border-gray-400">
             <h1>Commentaires</h1>
+            <div className="">
+              <form className="mt-2 p-2 border rounded border-gray-300 bg-gray-200">
+                <h2>Nouveau commentaire</h2>
+                <fieldset className="flex flex-col">
+                  <fieldset className="mt-2 flex flex-col w-1/2">
+                    <label>Titre du commentaire</label>
+                    <input className="px-2 py-1 hover:bg-gray-100 focus:bg-gray-100 border transition-all rounded" type="text" value={cTitre} defaultValue={cTitre}
+                      onChange={(event) => setCTitre(event.target.value)} name="comment[titre]" maxLength="100" required />
+                  </fieldset>
+                  <fieldset className="mt-2 flex flex-col w-1/2">
+                    <label>Message</label>
+                    <textarea className="px-2 py-1 hover:bg-gray-100 focus:bg-gray-100 border transition-all rounded" type="text" value={cMessage} defaultValue={cMessage}
+                      onChange={(event) => setCMessage(event.target.value)} name="comment[titre]" placeholder="Votre message..." maxLength="1000" required />
+                  </fieldset>
+                  <fieldset className="mt-2 flex flex-row">
+                    <button type="button" className="px-4 py-1 mr-5 rounded bg-orange-500 hover:bg-orange-800 transition-all" id="submit" onClick={commentSubmitHandler}>Envoyer</button>
+                  </fieldset>
+                </fieldset>
+              </form>
+            </div>
             <div className="mt-5">
               {
-                forumMessages !== null ? forumMessages.map(message => <div key={message.id_forum} className="mb-5">
-                <h3>{message.titre}</h3>
-                <p>{message.texte}</p>
-                <p>{message.date_message}</p>
-                <p>{allUsers[message.id_author].nom}</p>
-              </div>)
-              :
-              <div>Void</div>
+                forumMessages.length ? forumMessages.map(message => <div key={message.id_forum} className="mb-5 border rounded border-gray-300 bg-gray-200 p-4">
+                  <div className="flex justify-between"><h2>{message.titre}</h2><p className="text-sm">{allUsers[message.id_author].nom}</p></div>
+                  <p className="bg-white p-2 mt-1 mb-1 rounded">{message.texte}</p>
+                  <p className="text-xs pt-1">{message.date_message.split('T')[0] + " " + message.date_message.split('T')[1].split('.')[0]}</p>
+                </div>)
+                  :
+                  <div>Aucun message.</div>
               }
             </div>
           </div>
