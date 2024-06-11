@@ -20,7 +20,7 @@ services:
     container_name: tableau-elec
     build:
       dockerfile: Dockerfile
-      context: ./tableau-elec/docker/tableau-elec
+      context: ./docker/tableau-elec
       args:
         TZ: "Europe/Paris"
         NODE_VERSION: 20
