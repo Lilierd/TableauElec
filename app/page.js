@@ -11,7 +11,7 @@ export default function Home() {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(false);
 
-  const [activites, setActivites] = useState(null)
+  const [activites, setActivites] = useState([])
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
