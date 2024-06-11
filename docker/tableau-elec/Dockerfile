@@ -23,6 +23,7 @@ RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg -
     && npm install -g npm \
     && npm install -g pnpm \
     && npm install -g bun \
+    && npm install \
     && apt-get -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
