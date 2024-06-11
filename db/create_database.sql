@@ -7,6 +7,7 @@ CREATE TABLE Roles(
 CREATE TABLE Utilisateurs(
     id_utilisateur SERIAL,
     Nom VARCHAR(100),
+    password VARCHAR(255),
     id_role INT NOT NULL,
     PRIMARY KEY(id_utilisateur),
     CONSTRAINT fk_role
