@@ -47,18 +47,16 @@ export default function Home() {
   var activitesDisplay;
 
   if (isLoading) activitesDisplay = <div><p><Image src={loading} width={20} height={20} alt="Loading" />Chargement des activités...</p></div>;
-  if ((!activites || activites === "No data") && !isLoading) activitesDisplay = <p><span className="text-red-600 font-bold">Erreur :</span> Aucune activité trouvée.</p>;
-  if (!isLoading && (activites !== "No data" || !activites)) activitesDisplay = <div className='flex'>{activites.map((activity, key) => (<div key={key}><div className='w-48 max-w-xs'><ActiviteComponent activite={activity} /></div></div>))}</div>;
+  if (!activites && !isLoading) activitesDisplay = <p><span className="text-red-600 font-bold">Erreur :</span> Aucune activité trouvée.</p>;
+  if (!isLoading && (activites)) activitesDisplay = <div className='flex'>{activites.map((activity, key) => (<div key={key}><div className='w-48 max-w-xs'><ActiviteComponent activite={activity} /></div></div>))}</div>;
 
   return (
     <div>
       <div className='bg-gray-200 rounded p-2'>
         <div className='flex justify-between'><h1>Mes travaux</h1><p className='text-gray-600'>Du plus au moins récent</p></div>
-        {activites.length ? <div ref={itemsRef} onMouseDown={handleMouseDown} onMouseLeave={handleMouseLeave} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} className='flex overflow-x-scroll hide-scroll-bar overflow-hidden'>
+        <div ref={itemsRef} onMouseDown={handleMouseDown} onMouseLeave={handleMouseLeave} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} className='flex overflow-x-scroll hide-scroll-bar overflow-hidden'>
           {activitesDisplay}
-        </div> :
-        <div>Aucune activité...</div>
-        }
+        </div>
       </div>
       <div>
 
