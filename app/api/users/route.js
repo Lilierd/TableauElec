@@ -8,9 +8,9 @@ export async function GET(req) {
         // const headers = new Headers(req.headers);
         const userid = req.nextUrl.searchParams.get('user');
 
-        let query = "SELECT * FROM utilisateurs";
+        let query = "SELECT id_utilisateur, nom, id_role FROM utilisateurs";
         if (userid !== null)
-            query = `SELECT * FROM utilisateurs WHERE id_utilisateur=${userid}`;
+            query = `SELECT id_utilisateur, nom, id_role FROM utilisateurs WHERE id_utilisateur=${userid}`;
 
         const result = await conn.query(
             query,
@@ -34,9 +34,9 @@ export async function POST(req) {
     try {
         // const headers = new Headers(req.headers);
 
-        let query = "SELECT * FROM utilisateurs";
+        let query = "SELECT id_utilisateur, nom, id_role FROM utilisateurs";
         if (user !== null)
-            query = `SELECT * FROM utilisateurs WHERE id_utilisateur=${userid}`;
+            query = `SELECT id_utilisateur, nom, id_role FROM utilisateurs WHERE id_utilisateur=${userid}`;
 
         const result = await conn.query(
             query,
