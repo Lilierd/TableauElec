@@ -15,11 +15,11 @@ export default function Home() {
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('http://141.94.237.226:8080/api/activite/', { headers: { 'accept': 'yolo' } })
+    fetch('/api/activite', { headers: { 'accept': 'yolo' } })
       .then((res) => res.json())
       .then((activitesData) => {
-        setActivites(activitesData.body)
-        setLoading(false)
+        setActivites(activitesData.body);
+        setLoading(false);
       })
   }, []);
 
@@ -53,9 +53,11 @@ export default function Home() {
     <div>
       <div className='bg-gray-200 rounded p-2'>
         <div className='flex justify-between'><h1>Mes travaux</h1><p className='text-gray-600'>Du plus au moins récent</p></div>
-        <div ref={itemsRef} onMouseDown={handleMouseDown} onMouseLeave={handleMouseLeave} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} className='flex overflow-x-scroll hide-scroll-bar overflow-hidden'>
+        {activites.length ? <div ref={itemsRef} onMouseDown={handleMouseDown} onMouseLeave={handleMouseLeave} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} className='flex overflow-x-scroll hide-scroll-bar overflow-hidden'>
           {activitesDisplay}
-        </div>
+        </div> :
+        <div>Aucune activité...</div>
+        }
       </div>
       <div>
 

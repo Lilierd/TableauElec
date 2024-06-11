@@ -12,7 +12,7 @@ export default function Page() {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://141.94.237.226:8080/api/users/')
+    fetch('/api/users')
       .then((res) => res.json())
       .then((usersData) => {
         setUsers(usersData.body)

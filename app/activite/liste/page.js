@@ -11,7 +11,7 @@ export default function Page() {
   const [isLoading, setLoading] = useState(true)
  
   useEffect(() => {
-    fetch('http://141.94.237.226:8080/api/activite/')
+    fetch('/api/activite')
       .then((res) => res.json())
       .then((activitesData) => {
         setActivites(activitesData.body)

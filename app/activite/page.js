@@ -23,11 +23,11 @@ export default function ActivitePage() {
 
   useEffect(() => {
     if (activite_id !== null && activite_id !== "undefined") {
-      fetch(`http://141.94.237.226:8080/api/activite?activite=${activite_id}`)
+      fetch(`/api/activite?activite=${activite_id}`)
         .then((res) => res.json())
         .then((activitesData) => {
           setActivite(activitesData.body);
-          fetch(`http://141.94.237.226:8080/api/users?user=${activitesData.body[0].id_ct}`)
+          fetch(`/api/users?user=${activitesData.body[0].id_ct}`)
             .then((res) => res.json())
             .then((userData) => {
               setCdtUser(userData.body[0]);
@@ -37,11 +37,11 @@ export default function ActivitePage() {
               setRep(activitesData.body[0].rep_fonc)
               setDesc(activitesData.body[0].descript)
               // setFiles();
-              fetch(`http://141.94.237.226:8080/api/users`)
+              fetch(`/api/users`)
                 .then((res) => res.json())
                 .then((usersData) => {
                   setAllUsers(usersData.body);
-                  fetch(`http://141.94.237.226:8080/api/forum?activite=${activite_id}`)
+                  fetch(`/api/forum?activite=${activite_id}`)
                     .then((res) => res.json())
                     .then((forumData) => {
                       if (forumData.body !== "No data")
@@ -53,7 +53,7 @@ export default function ActivitePage() {
         })
     }
     else {
-      fetch(`http://141.94.237.226:8080/api/users`)
+      fetch(`/api/users`)
         .then((res) => res.json())
         .then((usersData) => {
           setAllUsers(usersData.body);

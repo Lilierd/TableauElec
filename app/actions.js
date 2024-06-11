@@ -24,7 +24,7 @@ export async function createActivity(formData) {
         desc: formData.get('desc')
     });
 
-    const id = await fetch('http://141.94.237.226:8080/api/activite/', { method: 'POST', body: data })
+    const id = await fetch('/api/activite', { method: 'POST', body: data })
     .then((res) => res.json())
     .then((data) => {
         return data.body;
@@ -47,7 +47,7 @@ export async function modifyActivity(formData) {
         desc: formData.get('desc')
     });
     
-    const res = await fetch('http://141.94.237.226:8080/api/activite/', { method: 'PATCH', body: data });
+    const res = await fetch('/api/activite', { method: 'PATCH', body: data });
 
     if (!res.ok)
         return;
@@ -58,7 +58,7 @@ export async function modifyActivity(formData) {
  * @returns List of users
  */
 export async function getAllUsers() {
-    const res = await fetch('http://141.94.237.226:8080/api/users/');
+    const res = await fetch('/api/users');
 
     if (!res.ok)
         return;
@@ -80,7 +80,7 @@ export async function modifyUser(formData) {
         id_role: formData.get('id_role')
     });
 
-    const res = await fetch('http://141.94.237.226:8080/api/users/', { method: 'PATCH', body: data });
+    const res = await fetch('/api/users', { method: 'PATCH', body: data });
 
     if (!res.ok)
         return;
@@ -96,7 +96,7 @@ export async function modifyUser(formData) {
  * @deprecated
  */
 export async function getAllActivites() {
-    const res = await fetch('http://141.94.237.226:8080/api/activite/', { headers: { 'cache-control': 'no-cache' } });
+    const res = await fetch('/api/activite', { headers: { 'cache-control': 'no-cache' } });
 
     if (!res.ok)
         return;
@@ -117,7 +117,7 @@ export async function postComment(formData) {
         id_activite: formData.get('id_activite')
     });
 
-    const res = await fetch('http://141.94.237.226:8080/api/forum/', { headers: { 'cache-control': 'no-cache' }, method: 'POST', body: data });
+    const res = await fetch('/api/forum/', { headers: { 'cache-control': 'no-cache' }, method: 'POST', body: data });
 
     return res.ok;
 }
