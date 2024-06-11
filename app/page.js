@@ -18,7 +18,8 @@ export default function Home() {
     fetch('/api/activite', { headers: { 'accept': 'yolo' } })
       .then((res) => res.json())
       .then((activitesData) => {
-        setActivites(activitesData.body);
+        if (activitesData.body !== "No data")
+          setActivites(activitesData.body);
         setLoading(false);
       })
   }, []);
