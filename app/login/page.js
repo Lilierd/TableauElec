@@ -2,29 +2,26 @@
 
 import { FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
+import { connectUser } from '../actions';
+import { useState } from 'react';
 
 export default function LoginPage() {
   const router = useRouter();
+  const [red, setRed] = useState("px-2 py-1 hover:bg-gray-200 focus:bg-gray-200 border bg-white transition-all rounded");
 
   async function handleSubmit(event) {
     event.preventDefault();
     
     const formData = new FormData(event.currentTarget);
-    const identifiant = formData.get('identifiant');
+    const userid = formData.get('userid');
     const password = formData.get('password');
     const stayConnected = formData.get('stayConnected') === 'on' ? true : false;
 
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ identifiant, password, stayConnected }),
-    });
-
-    if (response.ok) {
-      router.push('/');
-    } else {
-      // Handle errors
-    }
+    console.log("tt:"+connectUser(formData));
+    // if(connectUser(formData) === 'Mauvais identifiants.')
+    //   setRed("px-2 py-1 hover:bg-gray-200 focus:bg-gray-200 border border-red-400 bg-white transition-all rounded");
+    // else
+    //   setRed("px-2 py-1 hover:bg-gray-200 focus:bg-gray-200 border bg-white transition-all rounded");
   };
 
   return (
@@ -36,7 +33,7 @@ export default function LoginPage() {
             <fieldset className="flex flex-col mt-2">
               <label>Pseudo </label>
               <input className="px-2 py-1 hover:bg-gray-200 focus:bg-gray-200 border bg-white transition-all rounded"
-                type="text" name="identifiant" required />
+                type="text" name="userid" required />
             </fieldset>
             <fieldset className="flex flex-col mt-2">
               <label>Mot de passe </label>

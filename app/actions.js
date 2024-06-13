@@ -1,14 +1,26 @@
 'use server' //Pour que les données et interactions arrivent côté serveur
 
-import axios, { Axios } from 'axios';
+import { signIn } from '@/auth/auth';
+import { AuthError } from 'next-auth';
 import { NextRequest } from 'next/server';
 
 /**
  * Connexion utilisateur
- * @param {[pseudo, password, stayConnected]} formData 
+ * @param {FormData} formData 
  */
 export async function connectUser(formData) { //Connexion
-    console.log("Connexion : " + formData.pseudo + " " + formData.password + " " + formData.stayConnected);
+    try {
+        await signIn('credentials', {userid: formData.get("userid"), password: formData.get("password"), redirect:false});
+    } catch (error) {
+        if (error instanceof AuthError) {
+          switch (error.type) {
+            case 'CredentialsSignin':
+              return 'Mauvais identifiants.ddd';
+            default:
+              return "Quelque chose s'est mal passé.";
+          }
+        }
+      }
 }
 
 /**
