@@ -1,15 +1,33 @@
 "use client"
 
+import { logOut } from "@/app/actions";
+import { useCookies } from "next-client-cookies";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export function Header() {
-  const [isOpen, setOpen] = useState(false);
-  const openModal = () => setOpen(true);
-  const closeModal = () => setOpen(false);
+  const router = useRouter();
+  const [userid, setUserid] = useState(null);
+
+  const logOff = async () => {
+    await logOut();
+    router.push('/login');
+  }
+
+  var cookies;
+  
+  try {cookies = useCookies();} catch(error) {
+    cookies = null;
+  }
+
+  useEffect(() => {
+    if(cookies)
+      setUserid(cookies.get("userid"));
+  });
 
   return (<>
-    <header className='fixed top-0 left-0 right-0 border-b border-orange-400 p-2 flex justify-between'>
+    {userid && <header className='fixed top-0 left-0 right-0 border-b border-orange-400 p-2 flex justify-between'>
       <div className="hover:translate-x-1 hover:scale-110 duration-300 transition-all"><Link href="/">TableauElec</Link></div>
       <div><Link className="inline-block" href="/oldPage">oldPage</Link>
         {" | "}<Link className="inline-block" href="/oldPage/test">test</Link>
@@ -32,8 +50,11 @@ export function Header() {
         </div>
       </div>
       <div className='inline-block'>
-        <Link className="hover:-translate-x-1 transition-all duration-300 inline-block hover:scale-110" id="connexionBouton" href="/login">Connexion</Link>
+        <form action={async () => {
+            logOff()
+          }}>
+            <button type="submit" className="hover:-translate-x-1 transition-all duration-300 inline-block hover:scale-110" id="decoButton" >Déconnexion</button></form>
       </div>
-    </header>
+    </header>}
   </>);
 }
