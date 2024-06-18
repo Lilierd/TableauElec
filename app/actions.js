@@ -1,7 +1,9 @@
 'use server' //Pour que les données et interactions arrivent côté serveur
 
-import { signIn } from '@/auth/auth';
+import { signIn, signOut } from '@/auth/auth';
 import { AuthError } from 'next-auth';
+import { isRedirectError } from 'next/dist/client/components/redirect';
+import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
 
 /**
@@ -21,6 +23,18 @@ export async function connectUser(formData) { //Connexion
           }
         }
       }
+}
+
+export async function logOut() {
+    try {
+        cookies().delete("userid");
+        return await signOut();
+    } catch(error)
+    {
+        if(isRedirectError(error))
+            throw error;
+        console.log("Erreur Déconnexion : " + error);
+    }
 }
 
 /**

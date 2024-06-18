@@ -4,6 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import conn from '@/controller/db';
+import { cookies } from 'next/headers';
 
 /**
  * 
@@ -41,12 +42,16 @@ export const { auth, signIn, signOut } = NextAuth({
             const user = await getUser(userid);
             if (!user) return null;
             const passwordsMatch = await bcrypt.compare(password, user.password);
-            if (passwordsMatch) return user;
+
+            if (passwordsMatch) {
+              cookies().set('userid', userid);  //TODO: delete on signout
+              return user
+            };
           }
 
           console.log("Mauvais identifiants");
           return null;
-        } catch(e) {
+        } catch (e) {
           console.log("Erreur !!!" + e);
         }
       },
