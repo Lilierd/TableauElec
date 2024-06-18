@@ -28,7 +28,7 @@ services:
       - '.:/home/tableauElec'
     tty: true
     ports:
-      - "8080:8080"
+      - "${SERVER_PORT}:${SERVER_PORT}"
     networks:
       - tableau-elec-net
     # command: npm run dev
