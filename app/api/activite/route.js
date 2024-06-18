@@ -92,13 +92,45 @@ export async function PATCH(req) {
     try {
         const formData = await req.json();
 
-        const query = `UPDATE activites SET nom='${formData.titre}', id_ct=${formData.cdt}, descript='${formData.desc}', rep_fonc='${formData.rep}' WHERE id_activite=${formData.id_activite}`;
+        const values = [
+            formData.titre,
+            formData.cdt,
+            formData.desc,
+            formData.rep,
+            formData.id_activite
+        ];
+
+        const query = `UPDATE activites SET nom=$1, id_ct=$2, descript=$3, rep_fonc=$4 WHERE id_activite=$5`;
 
         const result = await conn.query(
-            query
+            query,
+            values
         );
 
         console.log("Modification activité.");
+
+        return NextResponse.json({ message: "Modification activité.", headers: { 'content-type': 'application/json' } }, { status: 200 });
+    } catch (error) {
+        console.log("Erreur : ", error);
+
+        return NextResponse.json({ message: "Injection échouée." });
+    }
+};
+
+/**
+ * 
+ * @param {NextRequest} req 
+ * @returns {NextResponse}
+ */
+export async function DELETE(req) {
+    try {
+        const id = await req.json();
+
+        const query = `DELETE FROM activites WHERE id_activite=$1`;
+
+        const result = await conn.query(query, [id]);
+
+        console.log("Suppression activité.");
 
         return NextResponse.json({ message: "Modification activité.", headers: { 'content-type': 'application/json' } }, { status: 200 });
     } catch (error) {

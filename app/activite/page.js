@@ -6,13 +6,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import loading from "@/public/loading.gif"
 import Image from "next/image";
+import { useCookies } from "next-client-cookies";
 
-import { createActivity, modifyActivity, postComment } from "@/app/actions";  // * <------- Données de création/modif envoyées ici
+import { createActivity, deleteActivity, modifyActivity, postComment } from "@/app/actions";  // * <------- Données de création/modif envoyées ici
+
 
 export default function ActivitePage() {
   const searchParams = useSearchParams();
   const activite_id = searchParams.get("activite");
   const router = useRouter();
+  // * const cookies = useCookies();
 
   const [activite, setActivite] = useState(null);
   const [allUsers, setAllUsers] = useState(null);
@@ -22,6 +25,8 @@ export default function ActivitePage() {
 
 
   useEffect(() => {
+    // * console.log(cookies.get("userid"));
+
     if (activite_id !== null && activite_id !== "undefined") {
       fetch(`/api/activite?activite=${activite_id}`)
         .then((res) => res.json())
@@ -88,7 +93,7 @@ export default function ActivitePage() {
     if (cdt == 0)
       return;
 
-    if (titre.length < 1 || cdt.length < 1 || rep.length < 1)
+    if (titre === null || cdt === null || rep === null)
       return;
 
     formData.append('id_activite', activite_id);
@@ -108,9 +113,14 @@ export default function ActivitePage() {
       });
     }
     else {
-      modifyActivity(formData);
+      await modifyActivity(formData);
       location.reload();
     }
+  }
+
+  const removeActivity = async (e) => {
+    await deleteActivity(activite_id);
+    router.push("/");
   }
 
   const commentSubmitHandler = async (e) => {
@@ -133,7 +143,7 @@ export default function ActivitePage() {
     <div>
       <div className="mb-4 p-2 flex justify-between">
         <div>{(!modifying && !(activite === null || activite_id === "undefined")) && <TeButton onClick={setModifying} texte={"Modifier"}>Modifier</TeButton>}</div>
-        {/* <button type="button" className="px-4 py-1 mr-5 rounded bg-orange-500 hover:bg-orange-800 transition-all" id="submit" onClick={setModifying}>Modifier</button> */}
+        <div>{!(activite === null || activite_id === "undefined") && <TeButton alert={true} onClick={removeActivity} className="bg-red-500" texte={"Supprimer"}>Supprimer</TeButton>}</div>
         <button className="group p-1 transition-all border-gray-400 duration-200 rounded inline-block border hover:bg-gray-200" onClick={() => router.back()}>
           <span className="group-hover:-translate-x-1 duration-200 inline-block">&lt;-</span> Retour</button>
       </div>
