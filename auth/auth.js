@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import { authConfig } from '@/auth.config';
-import Credentials from 'next-auth/providers/credentials';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import conn from '@/controller/db';
@@ -23,7 +23,13 @@ async function getUser(userid) {
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
-    Credentials({
+    CredentialsProvider({
+      id: 'credentials',
+      name: 'Credentials',
+      credentials: {
+        userid: { label: 'userid', type: 'text' },
+        password: { label: 'Mot de passe', type: 'password' },
+      },
       async authorize(credentials) {
         try {
           const parsedCredentials = z

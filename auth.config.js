@@ -1,4 +1,5 @@
 import { NextAuthConfig } from 'next-auth';
+import { userAgentFromString } from 'next/server';
 
 export const authConfig = {
     pages: {
@@ -7,12 +8,11 @@ export const authConfig = {
     callbacks: {
         authorized({ auth, request: { nextUrl } }) {
             const isLoggedIn = !!auth?.user;
-            const isOnDashboard = nextUrl.pathname.startsWith('/');
-            if (isOnDashboard) {
-                if (isLoggedIn) return true;
+            const isNotOnLogin = nextUrl.pathname !== '/login';
+            if (!isLoggedIn && isNotOnLogin) {
                 return false; // Redirect unauthenticated users to login page
-            } else if (isLoggedIn) {
-                return Response.redirect(new URL('/', nextUrl));
+            } else if (isLoggedIn && !isNotOnLogin) {
+                return true;
             }
             return true;
         },

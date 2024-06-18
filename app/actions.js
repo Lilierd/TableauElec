@@ -10,7 +10,7 @@ import { NextRequest } from 'next/server';
  */
 export async function connectUser(formData) { //Connexion
     try {
-        await signIn('credentials', {userid: formData.get("userid"), password: formData.get("password"), redirect:false});
+        return await signIn('credentials', { userid: formData.get("userid"), password: formData.get("password") });
     } catch (error) {
         if (error instanceof AuthError) {
           switch (error.type) {
