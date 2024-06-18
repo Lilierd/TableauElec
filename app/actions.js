@@ -4,7 +4,8 @@ import { signIn, signOut } from '@/auth/auth';
 import { AuthError } from 'next-auth';
 import { isRedirectError } from 'next/dist/client/components/redirect';
 import { cookies } from 'next/headers';
-import { NextRequest } from 'next/server';
+
+const baseUrl = "http://"+process.env.SERVER_IP+":"+process.env.SERVER_PORT;
 
 /**
  * Connexion utilisateur
@@ -50,7 +51,7 @@ export async function createActivity(formData) {
         desc: formData.get('desc')
     });
 
-    const id = await fetch('/api/activite', { method: 'POST', body: data })
+    const id = await fetch(baseUrl+'/api/activite', { method: 'POST', body: data })
     .then((res) => res.json())
     .then((data) => {
         return data.body;
@@ -73,10 +74,25 @@ export async function modifyActivity(formData) {
         desc: formData.get('desc')
     });
     
-    const res = await fetch('/api/activite', { method: 'PATCH', body: data });
+    const res = await fetch(baseUrl+'/api/activite', { method: 'PATCH', body: data });
 
     if (!res.ok)
         return;
+
+    return true;
+}
+
+/**
+ * Modifie une ligne dans la table "Activite"
+ * @param {int} id
+ */
+export async function deleteActivity(id) {
+    const res = await fetch(baseUrl+'/api/activite', { method: 'DELETE', body: id });
+
+    if (!res.ok)
+        return;
+
+    return true;
 }
 
 /**
@@ -84,7 +100,7 @@ export async function modifyActivity(formData) {
  * @returns List of users
  */
 export async function getAllUsers() {
-    const res = await fetch('/api/users');
+    const res = await fetch(baseUrl+'/api/users');
 
     if (!res.ok)
         return;
@@ -106,7 +122,7 @@ export async function modifyUser(formData) {
         id_role: formData.get('id_role')
     });
 
-    const res = await fetch('/api/users', { method: 'PATCH', body: data });
+    const res = await fetch(baseUrl+'/api/users', { method: 'PATCH', body: data });
 
     if (!res.ok)
         return;
@@ -122,7 +138,7 @@ export async function modifyUser(formData) {
  * @deprecated
  */
 export async function getAllActivites() {
-    const res = await fetch('/api/activite', { headers: { 'cache-control': 'no-cache' } });
+    const res = await fetch(baseUrl+'/api/activite', { headers: { 'cache-control': 'no-cache' } });
 
     if (!res.ok)
         return;
@@ -143,7 +159,7 @@ export async function postComment(formData) {
         id_activite: formData.get('id_activite')
     });
 
-    const res = await fetch('/api/forum/', { headers: { 'cache-control': 'no-cache' }, method: 'POST', body: data });
+    const res = await fetch(baseUrl+'/api/forum/', { headers: { 'cache-control': 'no-cache' }, method: 'POST', body: data });
 
     return res.ok;
 }
