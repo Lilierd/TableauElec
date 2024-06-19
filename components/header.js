@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 export function Header() {
   const router = useRouter();
   const [userid, setUserid] = useState(null);
+  const [username, setUsername] = useState(null);
 
   const logOff = async () => {
     await logOut();
@@ -22,8 +23,10 @@ export function Header() {
   }
 
   useEffect(() => {
-    if(cookies)
+    if(cookies){
       setUserid(cookies.get("userid"));
+      setUsername(cookies.get("username"));
+    }
   });
 
   return (<>
@@ -46,7 +49,8 @@ export function Header() {
           </div>
         </div>
       </div>
-      <div className='inline-block'>
+      <div className='inline-block flex'>
+        <p className="mr-3">({username})</p>
         <form action={async () => {
             logOff()
           }}>

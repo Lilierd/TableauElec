@@ -29,6 +29,9 @@ export async function connectUser(formData) { //Connexion
 export async function logOut() {
     try {
         cookies().delete("userid");
+        cookies().delete("username");
+        cookies().delete("userrole");
+
         return await signOut();
     } catch(error)
     {
