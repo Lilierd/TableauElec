@@ -1,6 +1,7 @@
 "use client"
 
 import { logOut } from "@/app/actions";
+import { Roles } from "@/controller/back";
 import { useCookies } from "next-client-cookies";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,10 +11,12 @@ export function Header() {
   const router = useRouter();
   const [userid, setUserid] = useState(null);
   const [username, setUsername] = useState(null);
+  const [userRole, setUserRole] = useState(null);
 
   const logOff = async () => {
     await logOut();
     router.push('/login');
+    location.reload();
   }
 
   var cookies;
@@ -26,6 +29,7 @@ export function Header() {
     if(cookies){
       setUserid(cookies.get("userid"));
       setUsername(cookies.get("username"));
+      setUserRole(cookies.get("userrole"));
     }
   });
 
@@ -35,19 +39,20 @@ export function Header() {
       <div>
         <div className="group inline-block"><Link href="/">Travaux<span className="group inline-block">&#129171;</span></Link>
           <div className="invisible absolute flex flex-col group-hover:visible bg-gray-300 border-l border-r border-gray-400 py-1 rounded">
-            <Link className="hover:bg-gray-200 px-5" href='/activite'>Création</Link>
+            {(userRole == Roles.Manager || userRole == Roles.CA) && <Link className="hover:bg-gray-200 px-5" href='/activite'>Création</Link>}
             <Link className="hover:bg-gray-200 px-5" href="/activite/liste">Liste</Link>
             <Link className="hover:bg-gray-200 px-5" href="/"></Link>
           </div>
         </div>
-        {" | "}
+        {(userRole == Roles.Manager) && <div className="group inline-block">&nbsp; &#x7C; &nbsp;</div>}
+        {(userRole == Roles.Manager) &&
         <div className="group inline-block"><Link href="/management">Management<span className="group inline-block">&#129171;</span></Link>
           <div className="invisible absolute flex flex-col group-hover:visible bg-gray-300 border-l border-r border-gray-400 py-1 rounded">
             <Link className="hover:bg-gray-200 px-5" href='/management/equipe'>Equipe</Link>
             {/* <Link className="hover:bg-gray-200 px-5" href="">Liste</Link> */}
             {/* <Link className="hover:bg-gray-200 px-5" href="/"></Link> */}
           </div>
-        </div>
+        </div>}
       </div>
       <div className='inline-block flex'>
         <p className="mr-3">({username})</p>
