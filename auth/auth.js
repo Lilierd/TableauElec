@@ -47,7 +47,7 @@ export const { auth, signIn, signOut } = NextAuth({
               cookies().set('userid', userid); 
               cookies().set('username', user.nom);
               cookies().set('userrole', user.id_role);
-              return user
+              return user;
             };
           }
 
