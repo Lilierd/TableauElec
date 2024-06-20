@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { modifyUser } from "@/app/actions";
 import { Roles } from "@/controller/back";
 import { useCookies } from "next-client-cookies";
+import { getCookie } from "cookies-next";
 
 export default function UserPage() {
   const searchParams = useSearchParams();
@@ -16,12 +17,7 @@ export default function UserPage() {
   const [isLoading, setLoading] = useState(true);
   const router = useRouter(null);
 
-  var cookies;
   const [userRole, setUserRole] = useState(null);
-
-  try { cookies = useCookies(); } catch (error) {
-    cookies = null;
-  }
 
   // * Requests data
   const [user, setUser] = useState(null);
@@ -33,30 +29,26 @@ export default function UserPage() {
   const [id_role, setIdRole] = useState('');
 
   useEffect(() => {
-    if (cookies) {
-      setUserRole(cookies.get("userrole"));
-    }
-    if (userRole == Roles.Manager)
-      fetch(`/api/users?user=${user_id}`)
-        .then((res) => res.json())
-        .then((usersData) => {
-          setUser(usersData.body[0]);
-          setNom(usersData.body[0].nom);
-          setIdRole(usersData.body[0].id_role);
-          fetch(`/api/role?role=${usersData.body[0].id_role}`)
-            .then((res) => res.json())
-            .then((roleData) => {
-              setRole(roleData.body[0]);
-              fetch(`/api/role`)
-                .then((res) => res.json())
-                .then((rolesData) => {
-                  setRoles(rolesData.body);
-                  setLoading(false);
-                })
-            })
-        });
-      else
-        setLoading(false);
+    setUserRole(getCookie("userrole"));
+
+    fetch(`/api/users?user=${user_id}`)
+      .then((res) => res.json())
+      .then((usersData) => {
+        setUser(usersData.body[0]);
+        setNom(usersData.body[0].nom);
+        setIdRole(usersData.body[0].id_role);
+        fetch(`/api/role?role=${usersData.body[0].id_role}`)
+          .then((res) => res.json())
+          .then((roleData) => {
+            setRole(roleData.body[0]);
+            fetch(`/api/role`)
+              .then((res) => res.json())
+              .then((rolesData) => {
+                setRoles(rolesData.body);
+                setLoading(false);
+              })
+          })
+      });
   }, []);
 
   const formSubmitHandler = async () => {

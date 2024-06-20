@@ -34,7 +34,7 @@ export const { auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         try {
           const parsedCredentials = z
-            .object({ userid: z.string(), password: z.string().min(8) })
+            .object({ userid: z.string(), password: z.string().min(6) })
             .safeParse(credentials);
 
           if (parsedCredentials.success) {
@@ -42,6 +42,7 @@ export const { auth, signIn, signOut } = NextAuth({
             const user = await getUser(userid);
             if (!user) return null;
             const passwordsMatch = await bcrypt.compare(password, user.password);
+
 
             if (passwordsMatch) {
               cookies().set('userid', userid); 

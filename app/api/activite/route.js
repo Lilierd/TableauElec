@@ -59,10 +59,11 @@ export async function POST(req) {
             formData.desc,
             "2024-10-19 09:00:00",
             formData.cdt,
-            formData.rep
+            formData.rep,
+            formData.execs
         ];
 
-        const query = "INSERT INTO activites(nom, descript, date_activite, id_ct, rep_fonc) VALUES($1, $2, $3, $4, $5);";
+        const query = "INSERT INTO activites(nom, descript, date_activite, id_ct, rep_fonc, id_exec) VALUES($1, $2, $3, $4, $5, $6);";
 
         const result = await conn.query(
             query,
@@ -97,10 +98,11 @@ export async function PATCH(req) {
             formData.cdt,
             formData.desc,
             formData.rep,
-            formData.id_activite
+            formData.id_activite,
+            formData.execs
         ];
 
-        const query = `UPDATE activites SET nom=$1, id_ct=$2, descript=$3, rep_fonc=$4 WHERE id_activite=$5`;
+        const query = `UPDATE activites SET nom=$1, id_ct=$2, descript=$3, rep_fonc=$4, id_exec=$6 WHERE id_activite=$5`;
 
         const result = await conn.query(
             query,

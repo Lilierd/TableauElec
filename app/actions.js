@@ -51,6 +51,7 @@ export async function createActivity(formData) {
         titre: formData.get('titre'),
         cdt: formData.get('cdt'),
         rep: formData.get('rep'),
+        execs: formData.get('execs'),
         desc: formData.get('desc')
     });
 

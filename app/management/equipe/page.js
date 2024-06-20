@@ -5,7 +5,7 @@ import Image from "next/image";
 import loading from "@/public/loading.gif"
 import { TeButton } from "@/components/TeButton";
 import Link from "next/link";
-import { useCookies } from "next-client-cookies";
+import { getCookie, setCookie } from 'cookies-next';
 import { Roles } from '@/controller/back';
 
 export default function Page() {
@@ -13,31 +13,22 @@ export default function Page() {
   const [roles, setRoles] = useState(null);
   const [isLoading, setLoading] = useState(true);
 
-  var cookies;
   const [userRole, setUserRole] = useState(null);
 
-  try { cookies = useCookies(); } catch (error) {
-    cookies = null;
-  }
-
   useEffect(() => {
-    if (cookies) {
-      setUserRole(cookies.get("userrole"));
-    }
-    if (userRole == Roles.Manager)
-      fetch('/api/users')
-        .then((res) => res.json())
-        .then((usersData) => {
-          setUsers(usersData.body)
-          fetch(`/api/role`)
-            .then((res) => res.json())
-            .then((roleData) => {
-              setRoles(roleData.body);
-              setLoading(false);
-            });
-        });
-      else
-        setLoading(false);
+    setUserRole(getCookie("userrole"));
+
+    fetch('/api/users')
+      .then((res) => res.json())
+      .then((usersData) => {
+        setUsers(usersData.body)
+        fetch(`/api/role`)
+          .then((res) => res.json())
+          .then((roleData) => {
+            setRoles(roleData.body);
+            setLoading(false);
+          });
+      });
   }, []);
 
   if (isLoading) return (<div><p><Image src={loading} width={20} height={20} alt="Loading" />Chargement des utilisateurs...</p></div>);

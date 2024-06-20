@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import loading from "@/public/loading.gif"
 import Image from "next/image";
 import { useCookies } from "next-client-cookies";
+import { getCookie, setCookie } from 'cookies-next';
 
 import { createActivity, deleteActivity, modifyActivity, postComment } from "@/app/actions";  // * <------- Données de création/modif envoyées ici
 import { Roles } from "@/controller/back";
@@ -23,62 +24,6 @@ export default function ActivitePage() {
   const [cdtUser, setCdtUser] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [forumMessages, setForumMessages] = useState([]);
-
-  var cookies;
-  const [userRole, setUserRole] = useState(null);
-  const [userid, setUserid] = useState(null);
-
-  try { cookies = useCookies(); } catch (error) {
-    cookies = null;
-  }
-
-  useEffect(() => {
-    if (userRole != Roles.Manager && userRole != Roles.CA) {
-      if (activite_id !== null && activite_id !== "undefined") {
-        fetch(`/api/activite?activite=${activite_id}`)
-          .then((res) => res.json())
-          .then((activitesData) => {
-            setActivite(activitesData.body);
-            fetch(`/api/users?user=${activitesData.body[0].id_ct}`)
-              .then((res) => res.json())
-              .then((userData) => {
-                setCdtUser(userData.body[0]);
-                setCdt(userData.body[0].id_utilisateur)
-                setTitre(activitesData.body[0].nom)
-                setExecs(activitesData.body[0].id_exec)
-                setRep(activitesData.body[0].rep_fonc)
-                setDesc(activitesData.body[0].descript)
-                // setFiles();
-                fetch(`/api/users`)
-                  .then((res) => res.json())
-                  .then((usersData) => {
-                    setAllUsers(usersData.body);
-                    fetch(`/api/forum?activite=${activite_id}`)
-                      .then((res) => res.json())
-                      .then((forumData) => {
-                        if (forumData.body !== "No data")
-                          setForumMessages(forumData.body);
-                        setLoading(false);
-                      });
-                  })
-              })
-          })
-      }
-      else {
-        fetch(`/api/users`)
-          .then((res) => res.json())
-          .then((usersData) => {
-            setAllUsers(usersData.body);
-            setLoading(false);
-          });
-      }
-    }
-
-    if (cookies) {
-      setUserRole(cookies.get("userrole"));
-      setUserid(cookies.get("userid"));
-    }
-  }, []);
 
   // * En cours de modif ou non
   const [modifying, setModify] = useState(false);
@@ -97,6 +42,53 @@ export default function ActivitePage() {
   const [cTitre, setCTitre] = useState("");
   const [cMessage, setCMessage] = useState("");
 
+  const [userRole, setUserRole] = useState(null);
+  const [userid, setUserid] = useState(null);
+
+  useEffect(() => {
+    setUserRole(getCookie("userrole"));
+    setUserid(getCookie("userid"));
+
+    if (activite_id !== null && activite_id !== "undefined") {
+      fetch(`/api/activite?activite=${activite_id}`)
+        .then((res) => res.json())
+        .then((activitesData) => {
+          setActivite(activitesData.body);
+          fetch(`/api/users?user=${activitesData.body[0].id_ct}`)
+            .then((res) => res.json())
+            .then((userData) => {
+              setCdtUser(userData.body[0]);
+              setCdt(userData.body[0].id_utilisateur)
+              setTitre(activitesData.body[0].nom)
+              setExecs(activitesData.body[0].id_exec)
+              setRep(activitesData.body[0].rep_fonc)
+              setDesc(activitesData.body[0].descript)
+              // setFiles();
+              fetch(`/api/users`)
+                .then((res) => res.json())
+                .then((usersData) => {
+                  setAllUsers(usersData.body);
+                  fetch(`/api/forum?activite=${activite_id}`)
+                    .then((res) => res.json())
+                    .then((forumData) => {
+                      if (forumData.body !== "No data")
+                        setForumMessages(forumData.body);
+                      setLoading(false);
+                    });
+                })
+            })
+        })
+    }
+    else {
+      fetch(`/api/users`)
+        .then((res) => res.json())
+        .then((usersData) => {
+          setAllUsers(usersData.body);
+          setLoading(false);
+        });
+    }
+  }, []);
+
   // * Submit du formulaire
   const formSubmitHandler = async (e) => {
     setNotModifying();
@@ -113,7 +105,7 @@ export default function ActivitePage() {
     formData.append('titre', titre);
     formData.append('cdt', cdt);
     formData.append('rep', rep);
-    formData.append('execs', execs);
+    formData.append('execs', execs);  
     formData.append('desc', desc);
     // formData.append('files',files);
 
@@ -150,7 +142,7 @@ export default function ActivitePage() {
     postComment(formData);
   }
 
-  if (activite == null && (userRole != Roles.Manager && userRole != Roles.CA)) return <p className="text-red-500">Accès refusé</p>
+  if (activite == null && (userRole != Roles.Manager && userRole != Roles.CA) && !isLoading) return <p className="text-red-500">Accès refusé</p>
   if (isLoading) return (<div><p><Image src={loading} width={20} height={20} alt="Loading" />Chargement de l'activité...</p></div>);
 
   return (
@@ -185,7 +177,7 @@ export default function ActivitePage() {
                 <select type="select" value={execs} defaultValue={0} onChange={(event) => setExecs(event.target.value)} name="activite[Execs]"
                   className="border border-gray-200 rounded hover:bg-gray-200 transition-all focus:border-orange-500 block w-full py-2 px-1 dark:bg-white dark:focus:ring-orange-500">
                   <option key={0} value={0}>Sélectionner un exécutant...</option>
-                  {allUsers.filter((u) => { return u.id_role == Roles.Intervenant }).map(ut => <option key={ut.id_utilisateur} value={ut.id_utilisateur}>{ut.nom}</option>)}
+                  {allUsers.filter((u) => { return u.id_role == Roles.Intervenant || u.id_role == Roles.CSI }).map(ut => <option key={ut.id_utilisateur} value={ut.id_utilisateur}>{ut.nom}</option>)}
                 </select>
                 {/* TODO: Mettre une possibilité de mettre plusieurs execs/Faire apparaitre une liste */}
               </fieldset>
