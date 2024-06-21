@@ -110,11 +110,8 @@ export default function ActivitePage() {
     // formData.append('files',files);
 
     if (activite_id === null || activite_id === "undefined") {
-      createActivity(formData).then(id => {
-        router.push({
-          path: `/activite`,
-          query: { activite: id }
-        });
+      createActivity(formData).then((id) => {
+        location.assign(`/activite?activite=${id}`);
       });
     }
     else {
@@ -140,6 +137,8 @@ export default function ActivitePage() {
     formData.append('id_utilisateur', userid);
 
     postComment(formData);
+
+    location.reload();
   }
 
   if (activite == null && (userRole != Roles.Manager && userRole != Roles.CA) && !isLoading) return <p className="text-red-500">Accès refusé</p>
@@ -197,8 +196,8 @@ export default function ActivitePage() {
                   onChange={(event) => setFiles(event.target.value)} name="activite[fichiers]" multiple />
               </fieldset>
               <fieldset className="flex flex-row mt-4">
-                <button type="submit" className="px-4 py-1 mr-5 rounded bg-orange-500 hover:bg-orange-800 transition-all" id="submit" onClick={formSubmitHandler}>Valider</button>
-                <button type="submit" className="px-4 py-2 rounded bg-orange-500 hover:bg-orange-800 transition-all" id="cancel" onClick={setNotModifying}>Annuler</button>
+                <button type="button" className="px-4 py-1 mr-5 rounded bg-orange-500 hover:bg-orange-800 transition-all" id="submit" onClick={formSubmitHandler}>Valider</button>
+                <button type="button" className="px-4 py-2 rounded bg-orange-500 hover:bg-orange-800 transition-all" id="cancel" onClick={setNotModifying}>Annuler</button>
               </fieldset>
             </fieldset>
           </fieldset>
